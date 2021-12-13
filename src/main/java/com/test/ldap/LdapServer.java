@@ -12,11 +12,12 @@ import org.reflections.Reflections;
 import javax.net.ServerSocketFactory;
 import javax.net.SocketFactory;
 import javax.net.ssl.SSLSocketFactory;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.net.InetAddress;
 import java.util.Set;
 import java.util.TreeMap;
-
+import java.io.FileWriter;
 
 public class LdapServer extends InMemoryOperationInterceptor {
 
@@ -71,6 +72,16 @@ public class LdapServer extends InMemoryOperationInterceptor {
     @Override
     public void processSearchResult(InMemoryInterceptedSearchResult result) {
         String base = result.getRequest().getBaseDN();
-        System.out.println("[+] Received LDAP Query: " + base);
+        if (base.length()>1) {
+            System.out.println("[+] Received LDAP Query: " + base);
+            String ResultfilePath = "./tmp.txt";
+            try {
+                FileWriter writer = new FileWriter(ResultfilePath, true);
+                writer.write(base + System.getProperty("line.separator"));
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
