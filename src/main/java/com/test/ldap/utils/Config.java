@@ -29,7 +29,7 @@ public class Config {
             help = true;
         }
 
-        jc.setProgramName("java -jar JNDIMonitor-1.0-SNAPSHOT.jar");
+        jc.setProgramName("java -jar JNDIMonitor-2.0.1-SNAPSHOT.jar");
         jc.setUsageFormatter(new UnixStyleUsageFormatter(jc));
 
         if(help) {

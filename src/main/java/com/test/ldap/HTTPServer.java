@@ -6,6 +6,8 @@ import com.sun.net.httpserver.HttpServer;
 import com.test.ldap.utils.Config;
 import java.io.File;
 import java.io.FileReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Scanner;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -37,7 +39,18 @@ public class HTTPServer {
                             httpExchange.close();
                             e.printStackTrace();
                         }
-                    }else {
+                    }else if((value[0].equals("api2"))&&(value[1].equals("all"))){
+                        try {
+                            httpExchange.getResponseHeaders().set("Content-type", "text/plain");
+                            byte[] response = Files.readAllBytes(Paths.get("./tmp.txt"));
+                            httpExchange.sendResponseHeaders(200, response.length);
+                            httpExchange.getResponseBody().write(response);
+                            httpExchange.close();
+                        } catch(Exception e){
+                            httpExchange.close();
+                            e.printStackTrace();
+                        }
+                    }else{
                         httpExchange.close();
                     }
                 } catch (Exception e) {

@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="JNDIMonitor" target="1.6" />
+      <module name="JNDIMonitor" target="7" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

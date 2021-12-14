@@ -1,4 +1,4 @@
-# JNDIMonitor
+# JNDIMonitor2.0.1
 
 # 简介
 
@@ -34,6 +34,12 @@ http://ip:port/?api=xxxxxx(长度无限制)
 ```
 
 ![](./img/jndi2.png)
+
+`2.0.1`版本新增`http API`接口，接口固定如下，支持返回全部日志记录
+
+```shell
+http://ip:port/?api2=all
+```
 
 ## 参考
 
