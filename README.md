@@ -35,9 +35,14 @@ http://ip:port/?api=xxxxxx(长度无限制)
 
 ![](./img/jndi2.png)
 
+# 更新
+
 `2.0.1`版本新增`http API`接口，接口固定如下，支持返回全部日志记录。
+
 日志记录新增`来源ip`和`触发时间`。
+
 添加防止重复内容写入功能。
+
 ```shell
 http://ip:port/?api2=all
 aaaaaa,127.0.0.1,2021-12-14 21:46:56 PM
