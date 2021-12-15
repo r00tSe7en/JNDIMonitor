@@ -15,6 +15,8 @@ import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.net.InetAddress;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Set;
 import java.util.TreeMap;
 import java.io.FileWriter;
@@ -71,7 +73,13 @@ public class LdapServer extends InMemoryOperationInterceptor {
      */
     @Override
     public void processSearchResult(InMemoryInterceptedSearchResult result) {
-        String base = result.getRequest().getBaseDN();
+        String base1 = result.getRequest().getBaseDN();
+        String base2 = result.getConnectedAddress();
+        SimpleDateFormat sdf = new SimpleDateFormat();
+        sdf.applyPattern("yyyy-MM-dd HH:mm:ss a");
+        Date date = new Date();
+        String base3 = sdf.format(date);
+        String base = base1+','+base2+','+base3;
         if (base.length()>1) {
             System.out.println("[+] Received LDAP Query: " + base);
             String ResultfilePath = "./tmp.txt";
