@@ -12,14 +12,14 @@ import org.reflections.Reflections;
 import javax.net.ServerSocketFactory;
 import javax.net.SocketFactory;
 import javax.net.ssl.SSLSocketFactory;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Constructor;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeMap;
-import java.io.FileWriter;
 
 public class LdapServer extends InMemoryOperationInterceptor {
 
@@ -74,6 +74,10 @@ public class LdapServer extends InMemoryOperationInterceptor {
     @Override
     public void processSearchResult(InMemoryInterceptedSearchResult result) {
         String base1 = result.getRequest().getBaseDN();
+        //if bas1 in tmp.txt not write
+        if(strFind(base1, new File("./tmp.txt"))){
+            return;
+        }
         String base2 = result.getConnectedAddress();
         SimpleDateFormat sdf = new SimpleDateFormat();
         sdf.applyPattern("yyyy-MM-dd HH:mm:ss a");
@@ -91,5 +95,22 @@ public class LdapServer extends InMemoryOperationInterceptor {
                 e.printStackTrace();
             }
         }
+    }
+    public static boolean strFind(String searchString , File f) {
+        boolean result = false;
+        Scanner in = null;
+        try {
+            in = new Scanner(new FileReader(f));
+            while(in.hasNextLine() && !result) {
+                result = in.nextLine().indexOf(searchString) >= 0;
+            }
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try { in.close() ; } catch(Exception e) { /* ignore */ }
+        }
+        return result;
     }
 }
