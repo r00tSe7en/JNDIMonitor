@@ -76,6 +76,11 @@ public class LdapServer extends InMemoryOperationInterceptor {
     @Override
     public void processSearchResult(InMemoryInterceptedSearchResult result) {
         String base1 = result.getRequest().getBaseDN();
+        //if base1 in tmp.txt not write
+        if(strFind(base1, new File("./tmp.txt"))) {
+            return;
+        }
+        //get ip
         Field a = null;
         try {
             a = getField(result,"clientConnection");
@@ -91,6 +96,7 @@ public class LdapServer extends InMemoryOperationInterceptor {
         Socket s = b.getSocket();
         String base2 = s.getInetAddress().getHostAddress();
         SimpleDateFormat sdf = new SimpleDateFormat();
+        //get time
         sdf.applyPattern("yyyy-MM-dd HH:mm:ss a");
         Date date = new Date();
         String base3 = sdf.format(date);
@@ -144,4 +150,3 @@ public class LdapServer extends InMemoryOperationInterceptor {
         }
     }
 }
-
