@@ -14,13 +14,15 @@ import javax.net.SocketFactory;
 import javax.net.ssl.SSLSocketFactory;
 import java.io.*;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeMap;
-
+import java.net.Socket;
+import com.unboundid.ldap.listener.LDAPListenerClientConnection;
 public class LdapServer extends InMemoryOperationInterceptor {
 
     TreeMap<String, LdapController> routes = new TreeMap<String, LdapController>();
@@ -74,11 +76,20 @@ public class LdapServer extends InMemoryOperationInterceptor {
     @Override
     public void processSearchResult(InMemoryInterceptedSearchResult result) {
         String base1 = result.getRequest().getBaseDN();
-        //if bas1 in tmp.txt not write
-        if(strFind(base1, new File("./tmp.txt"))){
-            return;
+        Field a = null;
+        try {
+            a = getField(result,"clientConnection");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        String base2 = result.getConnectedAddress();
+        LDAPListenerClientConnection b = null;
+        try {
+            b = (LDAPListenerClientConnection)a.get(result);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        Socket s = b.getSocket();
+        String base2 = s.getInetAddress().getHostAddress();
         SimpleDateFormat sdf = new SimpleDateFormat();
         sdf.applyPattern("yyyy-MM-dd HH:mm:ss a");
         Date date = new Date();
@@ -113,4 +124,24 @@ public class LdapServer extends InMemoryOperationInterceptor {
         }
         return result;
     }
+    public static Field getField(Object object,String fieldName) throws Exception{
+        Class clas = object.getClass();
+        Field field = null;
+        while (clas != Object.class){
+            try {
+                field = clas.getDeclaredField(fieldName);
+                break;
+            } catch (NoSuchFieldException e){
+                clas = clas.getSuperclass();
+            }
+        }
+
+        if (field != null){
+            field.setAccessible(true);
+            return field;
+        }else {
+            return null;
+        }
+    }
 }
+
